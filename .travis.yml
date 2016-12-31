@@ -1,0 +1,23 @@
+language: scala
+scala:
+  - 2.12.0
+  - 2.11.8
+jdk:
+  - oraclejdk8
+
+script: |
+  if [[ "$TRAVIS_SCALA_VERSION" == 2.11.* ]]; then
+    sbt ++$TRAVIS_SCALA_VERSION clean coverage test
+  else
+    sbt ++$TRAVIS_SCALA_VERSION clean test
+  fi
+
+after_success: |
+  if [[ "$TRAVIS_SCALA_VERSION" == 2.11.* ]]; then
+    sbt ++$TRAVIS_SCALA_VERSION coverageReport coveralls
+  fi
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot/
